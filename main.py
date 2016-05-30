@@ -20,10 +20,20 @@ def main(argv):
         print "do GenerateJSON"
     elif opt == "GenerateGraph":
         visualizer.begin()
+    elif opt == "extractname":
+        extract_name(argv[1])
     else:
         usage()
 
-
+def extract_name(url):
+    name = url[:-4]
+    lastSlashIndex = 0
+    for i,char in enumerate(url):
+        if char == '/':
+            lastSlashIndex = i      
+    name = name[lastSlashIndex+1:]                            
+    print("Name: %s\n" % name)
+    return name
 
 def git_pull(git_dir):
     if not os.path.isdir("./Target"):
