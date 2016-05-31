@@ -107,7 +107,7 @@ def PMD(commits):
         i = i + 1
 
 def usage():
-    print "Usage: Main.py <option> "
+    print "Usage: main.py <option> "
     print "option: getRepo <git repo address> - perform 'git pull' with given repoURL at ./target"
     print "        GenerateJSON               - generate JSON from the fuser "
     print "        GenerateGraph              - generate the result with D3 using JSON"
