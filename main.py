@@ -9,7 +9,9 @@ from tools import fuser
 
 
 def main(argv):
+    global target
     opt = argv[0]
+    target = extract_name(argv[1])
     if opt == "getRepo":
         try:
             git_pull(argv[1])
@@ -32,13 +34,13 @@ def extract_name(url):
         if char == '/':
             lastSlashIndex = i      
     name = name[lastSlashIndex+1:]                            
-    print("Name: %s\n" % name)
+#    print("Name: %s\n" % name)
     return name
 
 def git_pull(git_dir):
-    if not os.path.isdir("./Target"):
-        os.mkdir("Target")
-        Repo.clone_from(git_dir, "./Target")
+    if not os.path.isdir("./" + target):
+        os.mkdir(target)
+        Repo.clone_from(git_dir, "./" + target)
     else:
         print "/Target folder exist, please remove it to get new repository"
 
@@ -73,7 +75,7 @@ def generateJson():
 
 
 def generate_git_log():
-    g = Git('./Target/')
+    g = Git('./' + target + '/')
     gitLog = g.log("--reverse","--numstat")
     if not os.path.isdir("./PMDResult"):
         os.mkdir("PMDResult")
@@ -82,7 +84,7 @@ def generate_git_log():
     print ("gitLog.txt is placed in PMDResult")
 
 def PMD(commits):
-    g = Git('./Target/')
+    g = Git('./' + target)
 
     # create a branch for all commits
     # will reduce branch one we figure out the what to left out
@@ -96,12 +98,12 @@ def PMD(commits):
     for b in commits:
         g.checkout(b)
         if os.name is 'nt':
-            os.system("tools\\pmd-bin-5.1.3\\bin\\pmd.bat -dir ./Target -format xml "
+            os.system("tools\\pmd-bin-5.1.3\\bin\\pmd.bat -dir ./" + target  + " -format xml "
                   "-rulesets java-basic,java-coupling,java-design,java-codesize > " +
                   "PMDResult\\commit" + str(i) + ".xml")
 
         else:
-            os.system("tools/pmd-bin-5.1.3/bin/pmd.bat -dir ./Target -format xml "
+            os.system("tools/pmd-bin-5.1.3/bin/pmd.bat -dir ./" + target + "-format xml "
                   "-rulesets java-basic,java-coupling,java-design,java-codesize > " +
                   "PMDResult/commit" + str(i) + ".xml")
         i = i + 1
@@ -111,12 +113,11 @@ def usage():
     print "option: getRepo <git repo address> - perform 'git pull' with given repoURL at ./target"
     print "        GenerateJSON               - generate JSON from the fuser "
     print "        GenerateGraph              - generate the result with D3 using JSON"
-#
+
+
+target = ""
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         usage()
     else:
         main(sys.argv[1:])
-
-
-
