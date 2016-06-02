@@ -15,7 +15,7 @@ def parse(logpath):
     LoR= []
     pmd_folder = logpath
 
-    print pmd_folder
+    print("************** PMD folder: " +  pmd_folder)
 
     i = 0
 
@@ -27,9 +27,10 @@ def parse(logpath):
             num_viol = 0
             i = i + 1
 
-            if os.path.isfile(pmd_folder +"\\"+ "commit"+str(i)+".xml"):
+            # TODO: add windows directory notation too
+            if os.path.isfile(pmd_folder +"/commit"+str(i)+".xml"):
                 output.write("commit"+str(i)+".xml: \n")
-                f = open(pmd_folder +"\\"+ "commit"+str(i)+".xml")
+                f = open(pmd_folder +"/commit"+str(i)+".xml")
                 lines = f.readlines()
                 for line in lines:
                     if '<file name=' in line:
@@ -54,7 +55,10 @@ def parse(logpath):
                 # print num_viol
                 f.close()
                 LoR.append(Result)
-
+    
+    print("***************************************************************************************************************")
+    print(str(LoR))
+    print("***************************************************************************************************************")
     return LoR
 
 

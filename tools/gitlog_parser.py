@@ -14,7 +14,7 @@ i = 1
 currenthash = ""
 lasthash = ""
 email_list = ""
-
+target = ""
 
 class commit:
     def __init__(self):
@@ -39,6 +39,8 @@ def main(argv):
         return
     # assume a non-empty filepath
     path = argv[0]
+    global target
+    target = argv[1]
     LoC = []
     if path:
         parselog(path,LoC)
@@ -46,7 +48,9 @@ def main(argv):
     else:
         usage()
 
-def parse(logpath):
+def parse(logpath, dir):
+    global target
+    target = dir   
     LoC = []
     parselog(logpath + "/gitLog.txt",LoC)
     printLoC(LoC,logpath)
@@ -61,7 +65,7 @@ def parselog (path,LoC):
     global inMessage
 
     raw_log = open(path, 'r')
-
+        
     hashpattern = re.compile("commit\s[0-9A-Fa-f]{40}")
     datepattern = re.compile("Date:\s{3}\w{3}\s\w{3}\s\d{1,2}\s\d{2}:\d{2}:\d{2}\s\d{4}\s-\d{4}")
 
@@ -186,7 +190,7 @@ def saveGravatar (email):
 	gravatar_hash = hashlib.md5(clean_email.encode())
 	grav_url = base_url + gravatar_hash.hexdigest()
 	filename = email+".jpg"
-	urllib.urlretrieve(grav_url, "./web/static/gravatars/"+filename)
+	urllib.urlretrieve(grav_url, "./web/" + target + "/static/gravatars/"+filename)
 
 
 def usage ():
